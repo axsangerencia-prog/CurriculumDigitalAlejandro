@@ -70,7 +70,8 @@ describe('Task 3: 100% Bilingual Data Completeness & Hygiene', () => {
   });
 
   it('includes all profile essentials, 7 competencies, 12 software tools, audiovisual gear, and 4 hobbies', () => {
-    expect(PROFILE.cip).toContain('264611');
+    expect(PROFILE.cip.es).toContain('264611');
+    expect(PROFILE.cip.en).toContain('264611');
     expect(PROFILE.email).toBe('ing.alejandro.carrasco@gmail.com');
     expect(COMPETENCIES).toHaveLength(7);
     expect(SOFTWARE_SKILLS).toHaveLength(12);

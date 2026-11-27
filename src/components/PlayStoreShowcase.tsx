@@ -89,6 +89,7 @@ export function PlayStoreShowcase({ lang }: PlayStoreShowcaseProps) {
                   src={app.iconUrl}
                   alt={app.name}
                   fallbackLabel={app.name}
+                  compact
                   className="w-12 h-12 shrink-0 object-cover border border-black/10 bg-white"
                 />
                 <div className="min-w-0">
@@ -119,6 +120,7 @@ export function PlayStoreShowcase({ lang }: PlayStoreShowcaseProps) {
                     src={activeApp.iconUrl}
                     alt={activeApp.name}
                     fallbackLabel={activeApp.name}
+                    compact
                     className="w-16 h-16 shrink-0 object-cover border border-[#E4E4E7]"
                   />
                   <div className="min-w-0">
@@ -191,13 +193,15 @@ export function PlayStoreShowcase({ lang }: PlayStoreShowcaseProps) {
 
             {/* Right Interactive Screenshot Carousel */}
             <div
+              role="region"
+              aria-roledescription="carousel"
               className="lg:col-span-7 p-6 sm:p-8 flex flex-col justify-between gap-5"
               tabIndex={0}
               onKeyDown={(e) => {
                 if (e.key === 'ArrowRight') handleNext();
                 if (e.key === 'ArrowLeft') handlePrev();
               }}
-              aria-label={`${activeApp.name} screenshot carousel`}
+              aria-label={`${activeApp.name} ${lang === 'es' ? 'carrusel de capturas' : 'screenshot carousel'}`}
             >
               <div className="flex items-center justify-between gap-3">
                 <p className="text-xs font-medium text-[#0A0A0A] truncate">
@@ -229,13 +233,20 @@ export function PlayStoreShowcase({ lang }: PlayStoreShowcaseProps) {
                     transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
                     className="w-full h-full flex items-center justify-center bg-[#FAFAFA]"
                   >
-                    <SafeImage
-                      src={activeShot.url}
-                      alt={`${activeApp.name} — ${activeShot.caption[lang]}`}
-                      fallbackLabel={activeApp.name}
-                      loading="eager"
-                      className="w-full h-full object-contain cursor-zoom-in"
-                    />
+                    <button
+                      type="button"
+                      onClick={() => setLightboxOpen(true)}
+                      aria-label={`${UI_COPY.appsZoomScreenshot[lang]} — ${activeShot.caption[lang]}`}
+                      className="w-full h-full flex items-center justify-center bg-[#FAFAFA] cursor-zoom-in border-0 p-0"
+                    >
+                      <SafeImage
+                        src={activeShot.url}
+                        alt={`${activeApp.name} — ${activeShot.caption[lang]}`}
+                        fallbackLabel={activeApp.name}
+                        loading="eager"
+                        className="w-full h-full object-contain"
+                      />
+                    </button>
                   </motion.div>
                 </AnimatePresence>
 
@@ -278,6 +289,7 @@ export function PlayStoreShowcase({ lang }: PlayStoreShowcaseProps) {
                         src={shot.url}
                         alt=""
                         fallbackLabel={String(i + 1)}
+                        compact
                         className="w-full h-full object-cover"
                       />
                     </button>
@@ -306,7 +318,9 @@ export function PlayStoreShowcase({ lang }: PlayStoreShowcaseProps) {
                       <Lock className="w-3.5 h-3.5 text-[#0A0A0A]" strokeWidth={1.75} aria-hidden="true" />
                       <span>{proj.badge[lang]}</span>
                     </div>
-                    <h4 className="font-display font-bold text-lg text-[#0A0A0A]">{proj.name}</h4>
+                    <h4 className="font-display font-bold text-lg text-[#0A0A0A]">
+                      {proj.name[lang]}
+                    </h4>
                     <p className="text-sm text-[#52525B] leading-relaxed">
                       {proj.description[lang]}
                     </p>

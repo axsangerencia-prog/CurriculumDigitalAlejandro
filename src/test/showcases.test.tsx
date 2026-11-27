@@ -32,7 +32,7 @@ describe('Task 5: Play Store Carousel & 13-Platform MYSSA Showcase', () => {
 
   it('opens and closes LightboxModal on Escape', () => {
     render(<PlayStoreShowcase lang="es" />);
-    const zoomBtn = screen.getByRole('button', { name: /Ampliar captura/i });
+    const zoomBtn = screen.getByRole('button', { name: /^Ampliar captura$/i });
     fireEvent.click(zoomBtn);
     const dialog = screen.getByRole('dialog');
     expect(dialog).toBeInTheDocument();

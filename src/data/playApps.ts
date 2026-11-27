@@ -235,7 +235,10 @@ export const PLAY_APPS: PlayAppItem[] = [
 export const COMPLEMENTARY_PROJECTS: ComplementaryProjectItem[] = [
   {
     id: 'biblioteca-alejandria',
-    name: 'Biblioteca HSE Alejandría',
+    name: {
+      es: 'Biblioteca HSE Alejandría',
+      en: 'Alexandria HSE Digital Library',
+    },
     badge: { es: 'Código propietario · +5,000 archivos', en: 'Proprietary · 5,000+ resources' },
     description: {
       es: 'Biblioteca digital colaborativa HSE con más de 5,000 archivos técnicos, formatos, matrices y guías provistos por la comunidad para descarga especializada.',
@@ -249,7 +252,10 @@ export const COMPLEMENTARY_PROJECTS: ComplementaryProjectItem[] = [
   },
   {
     id: 'safe-fall-calculator',
-    name: 'Safe Fall Calculator',
+    name: {
+      es: 'Safe Fall Calculator',
+      en: 'Safe Fall Calculator',
+    },
     badge: { es: 'Código propietario · Ingeniería en Altura', en: 'Proprietary · Fall Clearance Engineering' },
     description: {
       es: 'Aplicación especializada para trabajos en altura que calcula con precisión el requerimiento de espacio libre de caída según tipo de dispositivo, anclaje y estatura del trabajador.',
@@ -263,7 +269,10 @@ export const COMPLEMENTARY_PROJECTS: ComplementaryProjectItem[] = [
   },
   {
     id: 'custom-enterprise-systems',
-    name: 'Sistemas Empresariales a Medida (9 líneas de solución)',
+    name: {
+      es: 'Sistemas Empresariales a Medida (9 líneas de solución)',
+      en: 'Custom Enterprise Systems (9 Automation Lines)',
+    },
     badge: { es: 'Soluciones Corporativas Automatizadas', en: 'Custom Enterprise Automation Suite' },
     description: {
       es: 'Diseño web corporativo, sistemas automatizados de cotizaciones, verificación web de certificados y exámenes médicos ocupacionales (EMO), cálculo automatizado de ventas/compras y renta mensual/anual, apps móviles para mantenimiento preventivo/correctivo, registro/seguimiento SSOMA y generación automatizada de matrices IPERC vigentes.',

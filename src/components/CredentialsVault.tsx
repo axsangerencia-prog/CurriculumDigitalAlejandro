@@ -32,6 +32,15 @@ function normalizeSearch(value: string): string {
     .trim();
 }
 
+function getFocusable(container: HTMLElement | null): HTMLElement[] {
+  if (!container) return [];
+  return Array.from(
+    container.querySelectorAll<HTMLElement>(
+      'button:not([disabled]), [href], input:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    ),
+  );
+}
+
 const CERT_CATEGORIES: { id: CertificateCategoryId; label: LocalizedText }[] = [
   { id: 'all', label: { es: 'Todos', en: 'All' } },
   { id: 'ai-data', label: { es: 'IA y Power BI', en: 'AI & Power BI' } },
@@ -47,6 +56,7 @@ export function CredentialsVault({ lang }: CredentialsVaultProps) {
   const [showAllCerts, setShowAllCerts] = useState(false);
   const [evidenceOpen, setEvidenceOpen] = useState(false);
 
+  const modalRef = useRef<HTMLDivElement | null>(null);
   const closeModalRef = useRef<HTMLButtonElement | null>(null);
   const prevFocusRef = useRef<HTMLElement | null>(null);
 
@@ -61,7 +71,21 @@ export function CredentialsVault({ lang }: CredentialsVaultProps) {
     }, 10);
 
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setEvidenceOpen(false);
+      if (e.key === 'Escape') {
+        setEvidenceOpen(false);
+      } else if (e.key === 'Tab') {
+        const focusable = getFocusable(modalRef.current);
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     };
     window.addEventListener('keydown', onKeyDown);
 
@@ -79,7 +103,7 @@ export function CredentialsVault({ lang }: CredentialsVaultProps) {
       if (certCategory !== 'all' && c.category !== certCategory) return false;
       if (!q) return true;
       const haystack = normalizeSearch(
-        `${c.title.es} ${c.title.en} ${c.institution} ${c.verificationCode ?? ''} ${c.yearOrNote ?? ''}`,
+        `${c.title.es} ${c.title.en} ${c.institution.es} ${c.institution.en} ${c.verificationCode?.es ?? ''} ${c.verificationCode?.en ?? ''} ${c.yearOrNote?.es ?? ''} ${c.yearOrNote?.en ?? ''}`,
       );
       return haystack.includes(q);
     });
@@ -89,6 +113,53 @@ export function CredentialsVault({ lang }: CredentialsVaultProps) {
     showAllCerts || certQuery.trim() !== '' || certCategory !== 'all'
       ? filteredCerts
       : filteredCerts.slice(0, 15);
+
+  const evidenceRows =
+    lang === 'es'
+      ? [
+          {
+            key: 'CIP N.º 264611',
+            val: 'Colegiado 28/08/2021 · Cód. Cap. 008267-20-H',
+          },
+          {
+            key: 'MTPE N.º 202200156',
+            val: 'Autos Directorales 0472 & 0481-2022-MTPE/3/19.2 (M2974001-1 / 2)',
+          },
+          {
+            key: 'MTPE/PRL-IM-00040',
+            val: 'Profesional Competente SST · R.D. 140-2016-MTPE/3/19',
+          },
+          {
+            key: 'UNTELS 088AT0668 / 088AB0380',
+            val: 'Título Prof. RCO 144-2020-UNTELS · Tercio Superior',
+          },
+          {
+            key: 'IPCNA Folio 101415 / TOEFL 443',
+            val: 'Programa Avanzado Nov 2025 + ETS TOEFL ITP Level 2',
+          },
+        ]
+      : [
+          {
+            key: 'CIP No. 264611',
+            val: 'Admitted Aug 28, 2021 · Chapter Code 008267-20-H',
+          },
+          {
+            key: 'MTPE No. 202200156',
+            val: 'Directorate Decrees 0472 & 0481-2022-MTPE/3/19.2 (M2974001-1 / 2)',
+          },
+          {
+            key: 'MTPE/PRL-IM-00040',
+            val: 'Certified Competent OHS Professional · R.D. 140-2016-MTPE/3/19',
+          },
+          {
+            key: 'UNTELS 088AT0668 / 088AB0380',
+            val: 'Engineering Title RCO 144-2020-UNTELS · Top Third Honor Roll',
+          },
+          {
+            key: 'IPCNA Folio 101415 / TOEFL 443',
+            val: 'Advanced Program Nov 2025 + ETS TOEFL ITP Level 2',
+          },
+        ];
 
   return (
     <section id="credenciales" className="bg-[#FAFAFA] border-b border-[#E4E4E7] py-16 sm:py-24">
@@ -128,7 +199,7 @@ export function CredentialsVault({ lang }: CredentialsVaultProps) {
               </div>
               <p className="text-sm font-semibold text-[#0A0A0A]">{EDUCATION.degree[lang]}</p>
               <p className="text-xs font-mono-tech text-[#52525B]">
-                {EDUCATION.bachelor[lang]} · {EDUCATION.period}
+                {EDUCATION.bachelor[lang]} · {EDUCATION.period[lang]}
               </p>
               <ul className="space-y-2 pt-1">
                 {EDUCATION.highlights.map((h, i) => (
@@ -143,12 +214,12 @@ export function CredentialsVault({ lang }: CredentialsVaultProps) {
                 ))}
               </ul>
               <div className="flex flex-wrap gap-1.5 pt-2">
-                {EDUCATION.codes.map((c) => (
+                {EDUCATION.codes.map((c, idx) => (
                   <span
-                    key={c}
+                    key={idx}
                     className="px-2 py-0.5 border border-[#E4E4E7] bg-[#FAFAFA] font-mono-tech text-[11px] text-[#0A0A0A]"
                   >
-                    {c}
+                    {c[lang]}
                   </span>
                 ))}
               </div>
@@ -165,7 +236,7 @@ export function CredentialsVault({ lang }: CredentialsVaultProps) {
                 {LANGUAGE_CERTS.map((lc, i) => (
                   <div key={lc.id} className={i > 0 ? 'pt-4 space-y-1' : 'space-y-1'}>
                     <div className="text-xs font-mono-tech text-[#52525B]">
-                      {lc.institution} · {lc.period}
+                      {lc.institution} · {lc.period[lang]}
                     </div>
                     <div className="font-display font-bold text-sm text-[#0A0A0A]">
                       {lc.title[lang]}
@@ -191,11 +262,11 @@ export function CredentialsVault({ lang }: CredentialsVaultProps) {
                   <div className="flex items-start gap-2.5">
                     <ShieldCheck className="w-5 h-5 text-[#0A0A0A] shrink-0 mt-0.5" strokeWidth={1.75} aria-hidden="true" />
                     <span className="text-xs font-semibold text-[#0A0A0A] leading-snug">
-                      {acc.authority}
+                      {acc.authority[lang]}
                     </span>
                   </div>
                   <div className="font-mono-tech text-xs font-semibold px-2.5 py-1 bg-[#0A0A0A] text-white inline-block">
-                    {acc.code}
+                    {acc.code[lang]}
                   </div>
                   <h3 className="font-display font-bold text-base text-[#0A0A0A]">
                     {acc.title[lang]}
@@ -239,7 +310,9 @@ export function CredentialsVault({ lang }: CredentialsVaultProps) {
               </p>
             </div>
             <span className="font-mono-tech text-xs text-[#0A0A0A] font-semibold">
-              10 CREDLY BADGES · 11+ VERIFIED TRACKS
+              {lang === 'es'
+                ? '10 INSIGNIAS CREDLY · 11+ RUTAS VERIFICADAS'
+                : '10 CREDLY BADGES · 11+ VERIFIED TRACKS'}
             </span>
           </div>
 
@@ -256,10 +329,10 @@ export function CredentialsVault({ lang }: CredentialsVaultProps) {
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between gap-2 font-mono-tech text-[11px] text-[#52525B]">
                     <span>{cred.issuer}</span>
-                    <span>{cred.issuedDate}</span>
+                    <span>{cred.issuedDate[lang]}</span>
                   </div>
                   <h4 className="font-display font-bold text-sm text-[#0A0A0A] leading-snug">
-                    {cred.title}
+                    {cred.title[lang]}
                   </h4>
                 </div>
                 <div className="flex flex-wrap gap-2 pt-2 border-t border-[#E4E4E7]">
@@ -378,15 +451,18 @@ export function CredentialsVault({ lang }: CredentialsVaultProps) {
                       <span>{cert.title[lang]}</span>
                     </div>
                     <div className="md:col-span-3 text-xs font-semibold text-[#52525B]">
-                      {cert.institution}
+                      {cert.institution[lang]}
                     </div>
                     <div className="md:col-span-3 flex items-center md:justify-end gap-2 font-mono-tech text-xs text-[#52525B]">
                       <span className="px-2 py-0.5 bg-[#F4F4F5] text-[#0A0A0A]">
-                        {cert.hours} {cert.hours.match(/^\d/) ? 'h' : ''}
+                        {cert.hours[lang]} {cert.hours[lang].match(/^\d/) ? 'h' : ''}
                       </span>
                       {cert.verificationCode && (
-                        <span className="text-[11px] truncate max-w-[16ch]" title={cert.verificationCode}>
-                          {cert.verificationCode}
+                        <span
+                          className="text-[11px] truncate max-w-[16ch]"
+                          title={cert.verificationCode[lang]}
+                        >
+                          {cert.verificationCode[lang]}
                         </span>
                       )}
                       {cert.verificationUrl && (
@@ -394,7 +470,11 @@ export function CredentialsVault({ lang }: CredentialsVaultProps) {
                           href={cert.verificationUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          aria-label={`Verify ${cert.title[lang]}`}
+                          aria-label={
+                            lang === 'es'
+                              ? `Verificar ${cert.title.es}`
+                              : `Verify ${cert.title.en}`
+                          }
                           className="text-[#0A0A0A] hover:underline inline-flex items-center"
                         >
                           <ExternalLink className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden="true" />
@@ -426,6 +506,7 @@ export function CredentialsVault({ lang }: CredentialsVaultProps) {
       {/* Verified Evidence Registry Modal */}
       {evidenceOpen && (
         <div
+          ref={modalRef}
           role="dialog"
           aria-modal="true"
           aria-label={UI_COPY.openEvidenceViewer[lang]}
@@ -436,12 +517,12 @@ export function CredentialsVault({ lang }: CredentialsVaultProps) {
             className="w-full max-w-3xl max-h-[85vh] bg-white border border-[#0A0A0A] flex flex-col overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="px-6 py-4 border-b border-[#E4E4E7] flex items-center justify-between gap-4">
-              <div>
-                <h3 className="font-display font-bold text-lg text-[#0A0A0A]">
+            <div className="px-4 sm:px-6 py-4 border-b border-[#E4E4E7] flex items-center justify-between gap-4">
+              <div className="min-w-0">
+                <h3 className="font-display font-bold text-base sm:text-lg text-[#0A0A0A] truncate">
                   {UI_COPY.openEvidenceViewer[lang]}
                 </h3>
-                <p className="text-xs text-[#52525B]">
+                <p className="text-xs text-[#52525B] leading-snug">
                   {lang === 'es'
                     ? 'Códigos públicos de validación oficial sin exposición de documentos civiles privados.'
                     : 'Public official validation codes and live verification links (civil ID scans kept private).'}
@@ -452,38 +533,26 @@ export function CredentialsVault({ lang }: CredentialsVaultProps) {
                 type="button"
                 onClick={() => setEvidenceOpen(false)}
                 aria-label={UI_COPY.closeModal[lang]}
-                className="h-9 w-9 border border-[#E4E4E7] hover:border-[#0A0A0A] hover:bg-[#0A0A0A] hover:text-white flex items-center justify-center transition-colors duration-150 cursor-pointer"
+                className="h-9 w-9 shrink-0 border border-[#E4E4E7] hover:border-[#0A0A0A] hover:bg-[#0A0A0A] hover:text-white flex items-center justify-center transition-colors duration-150 cursor-pointer"
               >
                 <X className="w-4 h-4" strokeWidth={1.75} aria-hidden="true" />
               </button>
             </div>
 
-            <div className="p-6 overflow-y-auto space-y-6 text-sm">
+            <div className="p-4 sm:p-6 overflow-y-auto space-y-6 text-sm">
               <div className="space-y-2">
                 <h4 className="font-display font-bold text-base text-[#0A0A0A]">
-                  {lang === 'es' ? 'Registros Oficiales del Estado y Colegiatura' : 'Official State & Engineering Registries'}
+                  {lang === 'es'
+                    ? 'Registros Oficiales del Estado y Colegiatura'
+                    : 'Official State & Engineering Registries'}
                 </h4>
                 <div className="border border-[#E4E4E7] divide-y divide-[#E4E4E7] font-mono-tech text-xs">
-                  <div className="p-3 flex flex-wrap justify-between gap-2">
-                    <span className="font-semibold text-[#0A0A0A]">CIP N.º 264611</span>
-                    <span className="text-[#52525B]">Colegiado 28/08/2021 · Cód. Cap. 008267-20-H</span>
-                  </div>
-                  <div className="p-3 flex flex-wrap justify-between gap-2">
-                    <span className="font-semibold text-[#0A0A0A]">MTPE N.º 202200156</span>
-                    <span className="text-[#52525B]">Autos Directorales 0472 &amp; 0481-2022-MTPE/3/19.2 (M2974001-1 / 2)</span>
-                  </div>
-                  <div className="p-3 flex flex-wrap justify-between gap-2">
-                    <span className="font-semibold text-[#0A0A0A]">MTPE/PRL-IM-00040</span>
-                    <span className="text-[#52525B]">Profesional Competente SST · R.D. 140-2016-MTPE/3/19</span>
-                  </div>
-                  <div className="p-3 flex flex-wrap justify-between gap-2">
-                    <span className="font-semibold text-[#0A0A0A]">UNTELS 088AT0668 / 088AB0380</span>
-                    <span className="text-[#52525B]">Título Prof. RCO 144-2020-UNTELS · Tercio Superior</span>
-                  </div>
-                  <div className="p-3 flex flex-wrap justify-between gap-2">
-                    <span className="font-semibold text-[#0A0A0A]">IPCNA Folio 101415 / TOEFL 443</span>
-                    <span className="text-[#52525B]">Programa Avanzado Nov 2025 + ETS TOEFL ITP Level 2</span>
-                  </div>
+                  {evidenceRows.map((row) => (
+                    <div key={row.key} className="p-3 flex flex-wrap justify-between gap-2">
+                      <span className="font-semibold text-[#0A0A0A]">{row.key}</span>
+                      <span className="text-[#52525B]">{row.val}</span>
+                    </div>
+                  ))}
                   <div className="p-3 flex flex-wrap justify-between gap-2">
                     <span className="font-semibold text-[#0A0A0A]">AXSAN AX.CAP.742–747</span>
                     <a
@@ -501,7 +570,9 @@ export function CredentialsVault({ lang }: CredentialsVaultProps) {
 
               <div className="space-y-2">
                 <h4 className="font-display font-bold text-base text-[#0A0A0A]">
-                  {lang === 'es' ? 'Portales Externos de Verificación en Línea' : 'External Live Verification Portals'}
+                  {lang === 'es'
+                    ? 'Portales Externos de Verificación en Línea'
+                    : 'External Live Verification Portals'}
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                   <a
@@ -510,7 +581,9 @@ export function CredentialsVault({ lang }: CredentialsVaultProps) {
                     rel="noopener noreferrer"
                     className="p-3 border border-[#E4E4E7] hover:border-[#0A0A0A] flex items-center justify-between"
                   >
-                    <span className="font-semibold text-[#0A0A0A]">Google AI Professional (Credly)</span>
+                    <span className="font-semibold text-[#0A0A0A]">
+                      Google AI Professional (Credly)
+                    </span>
                     <ExternalLink className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden="true" />
                   </a>
                   <a
@@ -519,7 +592,9 @@ export function CredentialsVault({ lang }: CredentialsVaultProps) {
                     rel="noopener noreferrer"
                     className="p-3 border border-[#E4E4E7] hover:border-[#0A0A0A] flex items-center justify-between"
                   >
-                    <span className="font-semibold text-[#0A0A0A]">Microsoft Power BI (Coursera)</span>
+                    <span className="font-semibold text-[#0A0A0A]">
+                      Microsoft Power BI (Coursera)
+                    </span>
                     <ExternalLink className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden="true" />
                   </a>
                   <a
@@ -528,16 +603,24 @@ export function CredentialsVault({ lang }: CredentialsVaultProps) {
                     rel="noopener noreferrer"
                     className="p-3 border border-[#E4E4E7] hover:border-[#0A0A0A] flex items-center justify-between"
                   >
-                    <span className="font-semibold text-[#0A0A0A]">SUNAFIL Certificados INPA</span>
+                    <span className="font-semibold text-[#0A0A0A]">
+                      {lang === 'es'
+                        ? 'SUNAFIL Certificados INPA'
+                        : 'SUNAFIL INPA Certificate Portal'}
+                    </span>
                     <ExternalLink className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden="true" />
                   </a>
                   <a
-                    href="https://app.trabajo.gob.pe/sigdoc-ext/"
+                    href="https://www2.trabajo.gob.pe/servicios-en-linea/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-3 border border-[#E4E4E7] hover:border-[#0A0A0A] flex items-center justify-between"
                   >
-                    <span className="font-semibold text-[#0A0A0A]">MTPE Verificación SIGDOC</span>
+                    <span className="font-semibold text-[#0A0A0A]">
+                      {lang === 'es'
+                        ? 'MTPE Servicios en Línea'
+                        : 'MTPE Online Verification Services'}
+                    </span>
                     <ExternalLink className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden="true" />
                   </a>
                 </div>

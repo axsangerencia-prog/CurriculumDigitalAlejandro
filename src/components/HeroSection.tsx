@@ -37,7 +37,7 @@ export function HeroSection({ lang }: HeroSectionProps) {
           >
             <div className="flex flex-wrap items-center gap-2.5 text-xs text-[#52525B]">
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 border border-[#0A0A0A] bg-[#0A0A0A] text-white font-mono-tech font-medium">
-                {PROFILE.cip}
+                {PROFILE.cip[lang]}
               </span>
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 border border-[#E4E4E7] bg-[#FAFAFA] text-[#0A0A0A] font-medium">
                 <MapPin className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden="true" />
@@ -113,7 +113,7 @@ export function HeroSection({ lang }: HeroSectionProps) {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 hover:text-[#0A0A0A] underline underline-offset-4 decoration-[#D4D4D8] hover:decoration-[#0A0A0A] transition-colors duration-150"
               >
-                <span>Ecosistema MYSSA</span>
+                <span>{UI_COPY.ecosystemBrandLink[lang]}</span>
                 <ExternalLink className="w-3 h-3" strokeWidth={1.75} aria-hidden="true" />
               </a>
               <a
@@ -139,7 +139,7 @@ export function HeroSection({ lang }: HeroSectionProps) {
               <div className="relative pt-6 px-6 bg-[#FAFAFA] border-b border-[#E4E4E7] flex justify-center overflow-hidden">
                 <SafeImage
                   src={portraitSrc}
-                  alt={`${PROFILE.fullName} — ${PROFILE.cip}`}
+                  alt={`${PROFILE.fullName} — ${PROFILE.cip[lang]}`}
                   fallbackLabel={PROFILE.shortName}
                   loading="eager"
                   className="w-full max-w-[340px] h-[300px] sm:h-[330px] object-contain object-bottom"

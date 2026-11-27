@@ -11,8 +11,17 @@ export const UI_COPY: Record<string, LocalizedText> = {
   navTrajectory: { es: 'Trayectoria', en: 'Experience' },
   navCredentials: { es: 'Credenciales', en: 'Credentials' },
   navSkills: { es: 'Habilidades', en: 'Skills' },
+  navMainAria: { es: 'Navegación principal', en: 'Main navigation' },
+  navMobileAria: { es: 'Navegación móvil', en: 'Mobile navigation' },
+  navOpenMenu: { es: 'Abrir menú', en: 'Open menu' },
+  navCloseMenu: { es: 'Cerrar menú', en: 'Close menu' },
   navDownloadCv: { es: 'CV PDF', en: 'CV PDF' },
   navHire: { es: 'Contratar', en: 'Hire Me' },
+  ecosystemBrandLink: { es: 'Ecosistema MYSSA', en: 'MYSSA Ecosystem' },
+  ecosystemModalTitle: {
+    es: 'Ecosistema SIG/SSOMA — MYSSA',
+    en: 'SIG/HSE Digital Ecosystem — MYSSA',
+  },
   heroAvailability: {
     es: 'Lima, Perú · Disponible presencial y remoto global',
     en: 'Lima, Peru · Available on-site & global remote',

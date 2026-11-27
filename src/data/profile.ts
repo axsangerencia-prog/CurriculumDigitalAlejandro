@@ -10,7 +10,7 @@ import type {
 export const PROFILE = {
   fullName: 'Julio Alejandro Carrasco Contreras',
   shortName: 'Alejandro Carrasco',
-  cip: 'CIP N.º 264611',
+  cip: { es: 'CIP N.º 264611', en: 'CIP No. 264611' } satisfies LocalizedText,
   cipChapterCode: '008267-20-H',
   rnpStatus: { es: 'RNP Vigente', en: 'Active RNP Registry' } satisfies LocalizedText,
   headlineRole: {

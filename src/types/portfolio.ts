@@ -56,7 +56,7 @@ export interface PlayAppItem {
 
 export interface ComplementaryProjectItem {
   id: string;
-  name: string;
+  name: LocalizedText;
   badge: LocalizedText;
   description: LocalizedText;
   tech: string[];
@@ -130,16 +130,16 @@ export interface EducationRecord {
   university: string;
   degree: LocalizedText;
   bachelor: LocalizedText;
-  period: string;
+  period: LocalizedText;
   credits: string;
   highlights: LocalizedText[];
-  codes: string[];
+  codes: LocalizedText[];
 }
 
 export interface OfficialAccreditation {
   id: string;
-  authority: string;
-  code: string;
+  authority: LocalizedText;
+  code: LocalizedText;
   title: LocalizedText;
   description: LocalizedText;
   verificationUrl?: string;
@@ -151,15 +151,15 @@ export interface LanguageCertificate {
   institution: string;
   title: LocalizedText;
   scoreOrResult: LocalizedText;
-  period: string;
+  period: LocalizedText;
   details: LocalizedText;
 }
 
 export interface CredlyCredential {
   id: string;
   issuer: string;
-  title: string;
-  issuedDate: string;
+  title: LocalizedText;
+  issuedDate: LocalizedText;
   credlyUrl?: string;
   courseraUrl: string;
   isMainBundle?: boolean;
@@ -178,12 +178,12 @@ export interface CertificateItem {
   id: string;
   cvIndex?: number;
   title: LocalizedText;
-  hours: string;
-  institution: string;
+  hours: LocalizedText;
+  institution: LocalizedText;
   category: Exclude<CertificateCategoryId, 'all'>;
   categoryLabel: LocalizedText;
   source: 'cv-table' | 'v35-annex';
-  verificationCode?: string;
+  verificationCode?: LocalizedText;
   verificationUrl?: string;
-  yearOrNote?: string;
+  yearOrNote?: LocalizedText;
 }

@@ -219,6 +219,13 @@ export function ExperienceExplorer({ lang }: ExperienceExplorerProps) {
         {/* Tab 2: 35 Freelance Consulting Services */}
         {activeTab === 'freelance' && (
           <div className="space-y-6">
+            <div className="flex items-center justify-between gap-2 text-xs font-mono-tech text-[#52525B]">
+              <span>
+                {lang === 'es'
+                  ? `Mostrando ${visibleFreelance.length} de ${filteredFreelance.length} contratos coincidentes (Total: ${FREELANCE_SERVICES.length})`
+                  : `Showing ${visibleFreelance.length} of ${filteredFreelance.length} matching contracts (Total: ${FREELANCE_SERVICES.length})`}
+              </span>
+            </div>
             <div className="flex flex-col md:flex-row gap-3">
               <div className="relative flex-1">
                 <Search

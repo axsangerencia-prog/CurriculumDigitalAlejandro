@@ -43,7 +43,7 @@ export function Navbar({ lang, onToggleLang }: NavbarProps) {
           </span>
         </a>
 
-        <nav aria-label="Main navigation" className="hidden lg:flex items-center gap-6">
+        <nav aria-label={UI_COPY.navMainAria[lang]} className="hidden lg:flex items-center gap-6">
           {links.map((item) => (
             <a
               key={item.href}
@@ -91,7 +91,7 @@ export function Navbar({ lang, onToggleLang }: NavbarProps) {
             type="button"
             onClick={() => setMobileOpen((prev) => !prev)}
             aria-expanded={mobileOpen}
-            aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+            aria-label={mobileOpen ? UI_COPY.navCloseMenu[lang] : UI_COPY.navOpenMenu[lang]}
             className="lg:hidden h-9 w-9 border border-[#E4E4E7] flex items-center justify-center text-[#0A0A0A] hover:border-[#0A0A0A] transition-colors duration-150 cursor-pointer"
           >
             {mobileOpen ? (
@@ -104,8 +104,13 @@ export function Navbar({ lang, onToggleLang }: NavbarProps) {
       </div>
 
       {mobileOpen && (
-        <div className="lg:hidden border-t border-[#E4E4E7] bg-white px-4 py-4 space-y-2">
-          <nav className="flex flex-col gap-1" aria-label="Mobile navigation">
+        <div
+          className="lg:hidden border-t border-[#E4E4E7] bg-white px-4 py-4 space-y-2"
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setMobileOpen(false);
+          }}
+        >
+          <nav className="flex flex-col gap-1" aria-label={UI_COPY.navMobileAria[lang]}>
             {links.map((item) => (
               <a
                 key={item.href}

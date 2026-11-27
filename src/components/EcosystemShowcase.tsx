@@ -358,7 +358,7 @@ export function EcosystemShowcase({ lang }: EcosystemShowcaseProps) {
           caption: `${p.title[lang]} — ${p.tagline[lang]}`,
         }))}
         activeIndex={safeIdx}
-        title="Ecosistema SIG/SSOMA — MYSSA"
+        title={UI_COPY.ecosystemModalTitle[lang]}
         lang={lang}
         onClose={() => setLightboxOpen(false)}
         onChangeIndex={setSpotlightIdx}

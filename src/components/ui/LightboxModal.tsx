@@ -19,6 +19,15 @@ interface LightboxModalProps {
   onChangeIndex: (index: number) => void;
 }
 
+function getFocusable(container: HTMLElement | null): HTMLElement[] {
+  if (!container) return [];
+  return Array.from(
+    container.querySelectorAll<HTMLElement>(
+      'button:not([disabled]), [href], input:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    ),
+  );
+}
+
 export function LightboxModal({
   isOpen,
   slides,
@@ -28,8 +37,19 @@ export function LightboxModal({
   onClose,
   onChangeIndex,
 }: LightboxModalProps) {
+  const dialogRef = useRef<HTMLDivElement | null>(null);
   const closeBtnRef = useRef<HTMLButtonElement | null>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
+
+  const onCloseRef = useRef(onClose);
+  const onChangeIndexRef = useRef(onChangeIndex);
+  const activeIndexRef = useRef(activeIndex);
+  const slidesLenRef = useRef(slides.length);
+
+  onCloseRef.current = onClose;
+  onChangeIndexRef.current = onChangeIndex;
+  activeIndexRef.current = activeIndex;
+  slidesLenRef.current = slides.length;
 
   useEffect(() => {
     if (!isOpen) return;
@@ -43,11 +63,25 @@ export function LightboxModal({
 
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        onClose();
-      } else if (e.key === 'ArrowRight' && slides.length > 1) {
-        onChangeIndex((activeIndex + 1) % slides.length);
-      } else if (e.key === 'ArrowLeft' && slides.length > 1) {
-        onChangeIndex((activeIndex - 1 + slides.length) % slides.length);
+        onCloseRef.current();
+      } else if (e.key === 'ArrowRight' && slidesLenRef.current > 1) {
+        onChangeIndexRef.current((activeIndexRef.current + 1) % slidesLenRef.current);
+      } else if (e.key === 'ArrowLeft' && slidesLenRef.current > 1) {
+        onChangeIndexRef.current(
+          (activeIndexRef.current - 1 + slidesLenRef.current) % slidesLenRef.current,
+        );
+      } else if (e.key === 'Tab') {
+        const focusable = getFocusable(dialogRef.current);
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
       }
     };
 
@@ -58,7 +92,7 @@ export function LightboxModal({
       window.removeEventListener('keydown', handleKey);
       previousFocusRef.current?.focus();
     };
-  }, [isOpen, activeIndex, slides.length, onClose, onChangeIndex]);
+  }, [isOpen]);
 
   if (!isOpen || slides.length === 0) return null;
 
@@ -66,6 +100,7 @@ export function LightboxModal({
 
   return (
     <div
+      ref={dialogRef}
       role="dialog"
       aria-modal="true"
       aria-label={title}
@@ -76,8 +111,8 @@ export function LightboxModal({
         className="w-full max-w-4xl bg-white border border-[#0A0A0A] overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 border-b border-[#E4E4E7] bg-white">
-          <div className="min-w-0 pr-4">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 border-b border-[#E4E4E7] bg-white gap-3">
+          <div className="min-w-0">
             <h4 className="font-display font-bold text-sm sm:text-base text-[#0A0A0A] truncate">
               {title}
             </h4>
@@ -94,7 +129,7 @@ export function LightboxModal({
               type="button"
               onClick={onClose}
               aria-label={UI_COPY.closeModal[lang]}
-              className="h-9 w-9 border border-[#E4E4E7] hover:border-[#0A0A0A] hover:bg-[#0A0A0A] hover:text-white flex items-center justify-center text-[#0A0A0A] transition-colors duration-150 cursor-pointer"
+              className="h-9 w-9 shrink-0 border border-[#E4E4E7] hover:border-[#0A0A0A] hover:bg-[#0A0A0A] hover:text-white flex items-center justify-center text-[#0A0A0A] transition-colors duration-150 cursor-pointer"
             >
               <X className="w-4 h-4" strokeWidth={1.75} aria-hidden="true" />
             </button>
@@ -102,13 +137,15 @@ export function LightboxModal({
         </div>
 
         <div className="relative bg-[#FAFAFA] flex items-center justify-center min-h-[280px] sm:min-h-[440px] max-h-[75vh] p-4">
-          <SafeImage
-            src={current.url}
-            alt={current.caption}
-            fallbackLabel={title}
-            loading="eager"
-            className="max-h-[68vh] w-auto max-w-full object-contain border border-[#E4E4E7] bg-white"
-          />
+          <div className="w-full max-w-3xl min-h-[240px] sm:min-h-[380px] flex items-center justify-center">
+            <SafeImage
+              src={current.url}
+              alt={current.caption}
+              fallbackLabel={`${title} — ${current.caption}`}
+              loading="eager"
+              className="max-h-[68vh] w-auto max-w-full object-contain border border-[#E4E4E7] bg-white"
+            />
+          </div>
 
           {slides.length > 1 && (
             <>

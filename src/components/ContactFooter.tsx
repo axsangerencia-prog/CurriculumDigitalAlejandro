@@ -37,7 +37,7 @@ export function ContactFooter({ lang }: ContactFooterProps) {
           <div className="lg:col-span-7 space-y-4">
             <div className="flex flex-wrap items-center gap-2">
               <span className="inline-block px-2.5 py-1 bg-[#0A0A0A] text-white font-mono-tech text-xs">
-                {PROFILE.cip}
+                {PROFILE.cip[lang]}
               </span>
               <span className="inline-block px-2.5 py-1 border border-[#E4E4E7] bg-white text-[#0A0A0A] text-xs font-medium">
                 {PROFILE.location[lang]}
@@ -116,7 +116,7 @@ export function ContactFooter({ lang }: ContactFooterProps) {
         <div className="border-t border-[#E4E4E7] pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-[#52525B]">
           <div>
             <span className="font-semibold text-[#0A0A0A]">{PROFILE.fullName}</span> —{' '}
-            <span>{PROFILE.cip}</span>
+            <span>{PROFILE.cip[lang]}</span>
           </div>
           <div className="flex flex-wrap items-center gap-5">
             <a
@@ -141,7 +141,7 @@ export function ContactFooter({ lang }: ContactFooterProps) {
               rel="noopener noreferrer"
               className="hover:text-[#0A0A0A] underline underline-offset-4"
             >
-              Ecosistema MYSSA
+              {UI_COPY.ecosystemBrandLink[lang]}
             </a>
             <a
               href={PROFILE.dossierRequestMailto}
