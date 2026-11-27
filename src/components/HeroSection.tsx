@@ -136,13 +136,13 @@ export function HeroSection({ lang }: HeroSectionProps) {
             className="lg:col-span-5"
           >
             <div className="border border-[#E4E4E7] bg-[#FAFAFA]">
-              <div className="relative pt-6 px-6 bg-[#FAFAFA] border-b border-[#E4E4E7] flex justify-center overflow-hidden">
+              <div className="relative bg-[#FAFAFA] border-b border-[#E4E4E7] overflow-hidden">
                 <SafeImage
                   src={portraitSrc}
                   alt={`${PROFILE.fullName} — ${PROFILE.cip[lang]}`}
                   fallbackLabel={PROFILE.shortName}
                   loading="eager"
-                  className="w-full max-w-[340px] h-[300px] sm:h-[330px] object-contain object-bottom"
+                  className="w-full h-[330px] sm:h-[360px] object-cover object-[50%_18%]"
                 />
               </div>
               <div className="p-4 sm:p-5 bg-white">

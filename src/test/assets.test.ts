@@ -5,8 +5,8 @@ import path from 'node:path';
 const root = path.resolve(__dirname, '../..');
 
 describe('Task 2: Public Static Assets & Sanitized Executive CV', () => {
-  it('includes portrait image public/images/alejandro-portrait.png optimized below 600 KB', () => {
-    const p = path.join(root, 'public', 'images', 'alejandro-portrait.png');
+  it('includes portrait image public/images/alejandro-portrait.jpg optimized below 600 KB', () => {
+    const p = path.join(root, 'public', 'images', 'alejandro-portrait.jpg');
     expect(fs.existsSync(p)).toBe(true);
     const size = fs.statSync(p).size;
     expect(size).toBeGreaterThan(50_000);

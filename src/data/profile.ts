@@ -42,7 +42,7 @@ export const PROFILE = {
   githubUrl: 'https://github.com/axsangerencia-prog',
   ecosystemUrl: 'https://ecosystem-sig.myssa.com.pe/',
   sanitizedCvPath: 'docs/CV-Ejecutivo-Alejandro-Carrasco.pdf',
-  portraitPath: 'images/alejandro-portrait.png',
+  portraitPath: 'images/alejandro-portrait.jpg',
 };
 
 export const METRICS: ProfileMetric[] = [
