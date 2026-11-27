@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+:root {
+  --bg-canvas: #FFFFFF;
+  --bg-surface: #FAFAFA;
+  --bg-muted: #F4F4F5;
+  --ink-primary: #0A0A0A;
+  --ink-secondary: #52525B;
+  --ink-tertiary: #71717A;
+  --border-hairline: #E4E4E7;
+  --border-strong: #0A0A0A;
+
+  --font-display: "Schibsted Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Hanken Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    overflow-x: clip;
+    background-color: var(--bg-canvas);
+    color: var(--ink-primary);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    overflow-x: clip;
+    background-color: var(--bg-canvas);
+    color: var(--ink-primary);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  ::selection {
+    background-color: var(--ink-primary);
+    color: var(--bg-canvas);
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    color: var(--ink-primary);
+    overflow-wrap: break-word;
+    min-width: 0;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--border-strong);
+    outline-offset: 2px;
+  }
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+.font-mono-tech {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Custom subtle architectural scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-canvas);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D4D4D8;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ink-primary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
