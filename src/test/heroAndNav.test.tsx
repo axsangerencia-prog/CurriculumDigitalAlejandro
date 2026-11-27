@@ -13,7 +13,10 @@ describe('Task 4: Navigation, Hero & Dual Engine Strategy', () => {
     fireEvent.click(langBtn);
     expect(toggle).toHaveBeenCalledTimes(1);
     const cvLink = screen.getByRole('link', { name: /CV PDF/i });
-    expect(cvLink).toHaveAttribute('href', expect.stringContaining('CV-Ejecutivo-Alejandro-Carrasco.pdf'));
+    expect(cvLink).toHaveAttribute(
+      'href',
+      'https://drive.google.com/uc?export=download&id=16dt_tFqeqaOResjvvJDVUoLIPcAvDP1C'
+    );
   });
 
   it('renders HeroSection in ES and EN with verified KPIs, portrait, and CTAs', () => {

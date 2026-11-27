@@ -11,7 +11,7 @@ interface NavbarProps {
 
 export function Navbar({ lang, onToggleLang }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const cvHref = `${import.meta.env.BASE_URL}${PROFILE.sanitizedCvPath}`;
+  const cvHref = PROFILE.cvDownloadUrl;
 
   const links = [
     { href: '#inicio', label: UI_COPY.navHome[lang] },
@@ -73,7 +73,8 @@ export function Navbar({ lang, onToggleLang }: NavbarProps) {
 
           <a
             href={cvHref}
-            download="CV-Ejecutivo-Alejandro-Carrasco.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
             className="hidden sm:inline-flex items-center gap-1.5 h-9 px-3.5 border border-[#0A0A0A] bg-white text-[#0A0A0A] hover:bg-[#0A0A0A] hover:text-white text-xs font-semibold transition-colors duration-150 whitespace-nowrap"
           >
             <Download className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden="true" />
@@ -125,7 +126,8 @@ export function Navbar({ lang, onToggleLang }: NavbarProps) {
           <div className="pt-3 border-t border-[#E4E4E7] flex flex-wrap gap-2">
             <a
               href={cvHref}
-              download="CV-Ejecutivo-Alejandro-Carrasco.pdf"
+              target="_blank"
+            rel="noopener noreferrer"
               onClick={() => setMobileOpen(false)}
               className="flex-1 inline-flex items-center justify-center gap-1.5 h-10 px-3 border border-[#0A0A0A] text-xs font-semibold text-[#0A0A0A]"
             >

@@ -18,7 +18,7 @@ interface HeroSectionProps {
 
 export function HeroSection({ lang }: HeroSectionProps) {
   const prefersReduced = useReducedMotion();
-  const cvHref = `${import.meta.env.BASE_URL}${PROFILE.sanitizedCvPath}`;
+  const cvHref = PROFILE.cvDownloadUrl;
   const portraitSrc = `${import.meta.env.BASE_URL}${PROFILE.portraitPath}`;
 
   return (
@@ -72,7 +72,8 @@ export function HeroSection({ lang }: HeroSectionProps) {
 
               <a
                 href={cvHref}
-                download="CV-Ejecutivo-Alejandro-Carrasco.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 h-12 px-5 border border-[#0A0A0A] bg-white text-[#0A0A0A] hover:bg-[#0A0A0A] hover:text-white text-sm font-semibold transition-colors duration-150"
               >
                 <Download className="w-4 h-4" strokeWidth={1.75} aria-hidden="true" />

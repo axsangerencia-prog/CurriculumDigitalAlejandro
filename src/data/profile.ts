@@ -41,6 +41,8 @@ export const PROFILE = {
   linkedinUrl: 'https://www.linkedin.com/in/alejandroexpert/',
   githubUrl: 'https://github.com/axsangerencia-prog',
   ecosystemUrl: 'https://ecosystem-sig.myssa.com.pe/',
+  cvDownloadUrl:
+    'https://drive.google.com/uc?export=download&id=16dt_tFqeqaOResjvvJDVUoLIPcAvDP1C',
   sanitizedCvPath: 'docs/CV-Ejecutivo-Alejandro-Carrasco.pdf',
   portraitPath: 'images/alejandro-portrait.jpg',
 };
